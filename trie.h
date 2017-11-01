@@ -39,6 +39,8 @@ int  delete_ngram(trie* ind,Ngram* deleting_this);
 
 char* search(trie* ind, Ngram* searching_this);
 
+int binary_search(trie_node * currentnode, int mysize);
+
 void delete_index(trie** ind);
 void delete_node(trie_node* node);
 

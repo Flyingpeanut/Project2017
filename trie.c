@@ -75,56 +75,49 @@ int  insert_ngram(trie* ind,Ngram* adding_this){
 		return -2;
 	}
 
-	
-	if(ind->capacity == ind->added){
-		ind->root = enlarge_node(ind->root, &(ind->capacity));
-	}
-	
 	trie_node * currentnode = ind->root, nextnode = NULL;
-	int 	first, last, middle, i, level = 0,
-	mysize = ind->capacity, 
-	used = ind->added;  	// needed?
+	int  i, level = 0;
+	int*  maxcap = &ind->capacity, cap_used = &ind->added;  	// needed?
 
-	for(i=0; i< adding_this->currentsize; i++){
+	for(i=0; i< adding_this->added; i++){
 		char* word = adding_this->wordBuffer[i];
-		
-		first = 0;
-		last = used;	
-	   	middle = (first+last)/2;
-	 
-	   while (first <= last) {
-	      
-	      	if (strcmp(currentnode[middle].word, word) == 0){ //FOUND
-	      		printf("%s found at location %d.\n", word, middle+1);
-	      		//// if it exists 
-			
-					// if there no more words make "final" true (mark that it part of a Ngram)
-			
-					// if there are more words just go to the next word
-				 
-	      	}  
-	      	else if (strcmp(currentnode[middle].word, word) < 0){
-	         	
-	        	
-	      	}
-	      	else
-	         	last = middle - 1;
-	 
-	      middle = (first + last)/2;
-	   }
-   	  if (first > last)
-      printf("Not found! %d is not present in the list.\n", search);
- 
-		//search if word exists in this level 
 
-			
-			// if it doesn't exist
-					// add it - sort it , if last mark it final
+		if(binary_search(currentnode, cap_used)==0){ // FOUND
+				// is it last then mark final!
+		}
+		else{ // not inside add
+			if(maxcap* == cap_used*){	// if full double
+				ind->root = enlarge_node(ind->root, &(ind->capacity));
+			}
 
+			// add it and sort it 
+		}
 
 	}
 
 	return 0;
+}
+
+int binary_search(trie_node * currentnode, int mysize){
+	int small = 0, int big = mysize, middle = (small+big)/2;
+	
+	while (small <= big) {
+	      
+	      	if (strcmp(currentnode[middle].word, word) == 0){ 			//FOUND
+	      		printf("%s found at location %d.\n", word, middle+1);
+	      		return 0;	 
+	      	}  
+	      	else if (strcmp(currentnode[middle].word, word) < 0){
+	         	big = middle + 1;
+	        	
+	      	}
+	      	else
+	         	small = middle - 1;
+	 
+	      middle = (small + big)/2;
+	}
+
+	return -1; 	
 }
 
 
