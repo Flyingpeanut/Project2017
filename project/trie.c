@@ -75,19 +75,19 @@ int  insert_ngram(trie* ind,Ngram* adding_this){
 		return -2;
 	}
 
-	trie_node * currentnode = ind->root, nextnode = NULL;
+	trie_node * currentnode = ind->root, *nextnode = NULL;
 	int  i, level = 0;
-	int*  maxcap = &ind->capacity, cap_used = &ind->added;  	// needed?
+	int*  maxcap = &ind->capacity, *cap_used = &ind->added;  	// needed?
 
-	for(i=0; i< adding_this->added; i++){
+	for(i=0; i< adding_this->currentsize; i++){
 		char* word = adding_this->wordBuffer[i];
 
 		if(binary_search(currentnode, word, cap_used)==0){ // FOUND
 				// is it last then mark final!
 		}
 		else{ // not inside add
-			if(maxcap* == cap_used*){	// if full double
-				ind->root = enlarge_node(ind->root, &(ind->capacity));
+			if(*maxcap == *cap_used){	// if full double
+				ind->root = enlarge_node(ind->root, ind->capacity);
 			}
 
 			// add it and sort it 
@@ -98,14 +98,16 @@ int  insert_ngram(trie* ind,Ngram* adding_this){
 	return 0;
 }
 
+//return position where word was found 
+// else -1 if nothing was found
 int binary_search(trie_node * currentnode, char* word,int mysize){
-	int small = 0, int big = mysize, middle = (small+big)/2;
+	int small = 0, big = mysize, middle = (small+big)/2;
 	
 	while (small <= big) {
 	      
 	      	if (strcmp(currentnode[middle].word, word) == 0){ 			//FOUND
 	      		printf("%s found at location %d.\n", word, middle+1);
-	      		return 0;	 
+	      		return middle;	 
 	      	}  
 	      	else if (strcmp(currentnode[middle].word, word) < 0){
 	         	big = middle + 1;
