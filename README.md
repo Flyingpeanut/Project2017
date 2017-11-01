@@ -2,6 +2,6 @@
 
 
 
-compile: make
-exe command: ./myexe -i test.init -q test.work
+compile: make __
+exe command: ./myexe -i test.init -q test.work __
 clean: make clean (deletes .o, exe)
