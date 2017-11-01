@@ -1,13 +1,16 @@
 CC= gcc
 CFLAGS= -g -Wall
 LFLAGS= -lpthread
-all:  Ngram main
+all:  Ngram  trie main 
 
-Ngram:	Ngram.c Ngram.h
+Ngram: Ngram.c Ngram.h
 	gcc  -g -Wall -c  Ngram.c 
 
-main: main.c header.h Ngram.o
-	gcc  -g -Wall  main.c Ngram.o -o  myexe 
+trie: trie.c trie.h
+	gcc -g -Wall -c trie.c
+
+main: main.c header.h Ngram.o trie.o
+	gcc  -g -Wall  main.c Ngram.o  trie.o -o  myexe 
 
 clean: 
 	$(RM) myexe *.o *~

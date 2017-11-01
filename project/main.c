@@ -7,7 +7,7 @@ int main(int argc, char* argv[]){
     
 	char   inputFile[WORDLIMIT];
     char   queryfile[WORDLIMIT];
-    char   word[WORDLIMIT];
+   // char   word[WORDLIMIT];
     FILE * input;
     int option;
     if(argc<5){
@@ -95,11 +95,11 @@ int main(int argc, char* argv[]){
             additions++; 
         }
         else if (strcmp(type,DELETE)==0){
-            printf("found DELETE");  
+            printf("found DELETE\n");  
             deletions++;
         }
         else if (strcmp(type,FINAL)==0){
-            printf("found FINAL");  
+            printf("found FINAL\n");  
             break;
         }
         else{
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]){
             break;
         }
        //  printf("PRINTING NGRAM\n");
-       // printNgram(myNgram);
+        printNgram(myNgram);
 
         // do shit with Ngram!!!
 

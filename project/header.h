@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <unistd.h>
 
 #define WORDLIMIT 50
@@ -14,6 +15,7 @@
 #define ADD			"A"
 #define QUERY		"Q"
 #define FINAL		"F"
+#define OK_SUCCESS  0
 #define	ARG_ERROR 	1
 #define MEMERR  	2
 #define BADUSE		3
