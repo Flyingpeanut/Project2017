@@ -22,17 +22,21 @@ trie_node* create_trie_node(){
 
 trie_node*	enlarge_node(trie_node* mynode,int* mysize){
 
-	if(mynode==NULL){
+	if(mynode==NULL){	// Node was- uninitialized
 		printf("no node... creating node\n");
 
 		return create_trie_node();
 	}
+
 	trie_node* enlargednode = realloc(mynode,(*mysize)*sizeof(trie_node));
+
 	if(enlargednode == NULL){
 		printf("MEMERROR");
 		return NULL;
 	}
+
 	*mysize *=2;
+
 	return enlargednode;
 }
 
@@ -110,11 +114,11 @@ int binary_search(trie_node * currentnode, char* word,int mysize){
 	      		return middle;	 
 	      	}  
 	      	else if (strcmp(currentnode[middle].word, word) < 0){
-	         	big = middle + 1;
+	         	big = middle - 1;
 	        	
 	      	}
 	      	else
-	         	small = middle - 1;
+	         	small = middle + 1;
 	 
 	      middle = (small + big)/2;
 	}
@@ -125,7 +129,71 @@ int binary_search(trie_node * currentnode, char* word,int mysize){
 
 int  delete_ngram(trie* ind,Ngram* deleting_this){
 
-	return 0;
+	if(ind == NULL){
+		printf("NO TRIE\n");
+		return -1;
+	}
+	 
+	if(deleting_this == NULL){
+		printf("NO NGRAM\n");
+		return -2;
+	}
+
+	int* to_be_deleted;  // position of deletion targets in each level of the trie
+	int level,cap_used , position_found = -1,
+	  size_of_Ngram = deleting_this->currentsize;
+	
+	trie_node * currentnode = ind->root;
+	cap_used = ind->added;
+	// **to_be_deleted = malloc(sizeof(trie_node*)*size_of_Ngram);
+	to_be_deleted = malloc(sizeof(int)*size_of_Ngram);
+	
+	if(/*to_be_deleted == NULL ||*/ to_be_deleted == NULL){
+		printf("MEMERROR\n");
+		return MEMERR;
+	}
+
+	for(level=0; level < size_of_Ngram; level++){
+
+			char* word = deleting_this->wordBuffer[level];
+			position_found = binary_search(currentnode, word, cap_used);
+
+			if(position_found >= 0){ // FOUND
+
+				to_be_deleted[level] = position_found;			// mark position for later deletion
+				cap_used = currentnode[position_found].added;	//	prepare for next iteration and go down one level
+				currentnode = currentnode[position_found].children;
+			}
+			else{ // Ngram isn't in trie free malloced space and stop delete 
+				free(to_be_deleted);
+				return -1;
+			}
+	}
+	delete_ngram_subfunction(ind, to_be_deleted);
+	free(to_be_deleted);
+
+	return OK_SUCCESS;
+}
+
+// whole ngram has been found and will be deleted
+void 	delete_ngram_subfunction(trie* ind, int * to_be_deleted, int maxlevel){
+
+	
+	trie_node * currentnode = ind->root;
+	int level, cap_used = ind->added;
+
+	for(level = maxlevel-1; level >= 0; level--){
+		int position_found = to_be_deleted[level];
+		int size_children = currentnode[position_found].added;
+		if(size_children > 1){
+			printf("hue\n");
+		}
+		else{
+			printf("hue\n");
+		}
+
+	}
+
 }
 
 
