@@ -130,13 +130,15 @@ int binary_search(trie_node * currentnode, char* word,int mysize){
 int  delete_ngram(trie* ind,Ngram* deleting_this){
 
 	if(ind == NULL){
+
 		printf("NO TRIE\n");
-		return -1;
+		return ARG_ERROR;
 	}
 	 
 	if(deleting_this == NULL){
+
 		printf("NO NGRAM\n");
-		return -2;
+		return ARG_ERROR;
 	}
 
 	int* to_be_deleted;  // position of deletion targets in each level of the trie
@@ -145,10 +147,11 @@ int  delete_ngram(trie* ind,Ngram* deleting_this){
 	
 	trie_node * currentnode = ind->root;
 	cap_used = ind->added;
-	// **to_be_deleted = malloc(sizeof(trie_node*)*size_of_Ngram);
+	trie_node **deleted_nodes = malloc(sizeof(trie_node*)*size_of_Ngram);
 	to_be_deleted = malloc(sizeof(int)*size_of_Ngram);
 	
-	if(/*to_be_deleted == NULL ||*/ to_be_deleted == NULL){
+	if(deleted_nodes == NULL || to_be_deleted == NULL){
+
 		printf("MEMERROR\n");
 		return MEMERR;
 	}
@@ -161,39 +164,58 @@ int  delete_ngram(trie* ind,Ngram* deleting_this){
 			if(position_found >= 0){ // FOUND
 
 				to_be_deleted[level] = position_found;			// mark position for later deletion
+				deleted_nodes[level] = currentnode;
 				cap_used = currentnode[position_found].added;	//	prepare for next iteration and go down one level
 				currentnode = currentnode[position_found].children;
 			}
-			else{ // Ngram isn't in trie free malloced space and stop delete 
+			else{ // Ngram isn't in trie free allocated space and stop delete
+
 				free(to_be_deleted);
-				return -1;
+				return NOTFOUND;
 			}
 	}
-	delete_ngram_subfunction(ind, to_be_deleted, size_of_Ngram);
+	delete_ngram_subfunction(ind, deleted_nodes, to_be_deleted, size_of_Ngram);
 	free(to_be_deleted);
 
 	return OK_SUCCESS;
 }
 
 // whole ngram has been found and will be deleted
-void 	delete_ngram_subfunction(trie* ind, int * to_be_deleted, int maxlevel){
+void 	delete_ngram_subfunction(trie* ind,trie_node** deleted_nodes, int * to_be_deleted, int maxlevel){
 
-	
-	trie_node * currentnode = ind->root;
-	int level, cap_used = ind->added;
+	int level  = maxlevel - 1, deleted_flag = 1;
+	trie_node * currentnode = deleted_nodes[level];
+	currentnode[ to_be_deleted[level] ].final = false;
 
-	for(level = maxlevel-1; level >= 0; level--){
+	for(; level >= 0; level--){
+		currentnode = deleted_nodes[level];
 		int position_found = to_be_deleted[level];
+		
+		if(deleted_flag == 0){
+			currentnode[position_found].added--;
+		
+		}
 		int size_children = currentnode[position_found].added;
-		if(size_children > 1){
-			printf("hue\n");
+	
+		if(size_children > 0){	// dt delete 
+			// other n grams pass from here can't delete, nor upper level
+			// thus deletion stop here
+			return;
 		}
 		else{
-			printf("hue\n");
+			// reset then resort
+			deleted_flag = 0;
+			currentnode[position_found].word[0]		= '\0';
+			currentnode[position_found].final 		= false;
+			currentnode[position_found].capacity 	= 0;
+			currentnode[position_found].added 		= 0;
+			if( currentnode[position_found].children != NULL ) {
+
+				free(currentnode[position_found].children);
+			}
+			//memmove
 		}
-
 	}
-
 }
 
 
