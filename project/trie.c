@@ -86,12 +86,12 @@ int  insert_ngram(trie* ind,Ngram* adding_this){
 	for(i=0; i< adding_this->currentsize; i++){
 		char* word = adding_this->wordBuffer[i];
 
-		if(binary_search(currentnode, word, cap_used)==0){ // FOUND
+		if(binary_search(currentnode, word, *cap_used)==0){ // FOUND
 				// is it last then mark final!
 		}
 		else{ // not inside add
 			if(*maxcap == *cap_used){	// if full double
-				ind->root = enlarge_node(ind->root, ind->capacity);
+				ind->root = enlarge_node(currentnode, maxcap);
 			}
 
 			// add it and sort it 
@@ -169,7 +169,7 @@ int  delete_ngram(trie* ind,Ngram* deleting_this){
 				return -1;
 			}
 	}
-	delete_ngram_subfunction(ind, to_be_deleted);
+	delete_ngram_subfunction(ind, to_be_deleted, size_of_Ngram);
 	free(to_be_deleted);
 
 	return OK_SUCCESS;

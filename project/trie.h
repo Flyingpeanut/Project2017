@@ -32,14 +32,15 @@ typedef struct trie{
 trie* init_Trie();
 trie_node* create_trie_node();
 //OK SUCCESS?!
+	
+int 	insert_ngram(trie* ind,Ngram* adding_this);
 
-int  insert_ngram(trie* ind,Ngram* adding_this);
+int 	delete_ngram(trie* ind,Ngram* deleting_this);
 
-int  delete_ngram(trie* ind,Ngram* deleting_this);
+char*	search(trie* ind, Ngram* searching_this);
 
-char* search(trie* ind, Ngram* searching_this);
-
-int binary_search(trie_node * currentnode, char* word,int mysize);
+void 	delete_ngram_subfunction(trie* ind, int * to_be_deleted, int maxlevel);
+int 	binary_search(trie_node * currentnode, char* word,int mysize);
 
 void delete_index(trie** ind);
 void delete_node(trie_node* node);
