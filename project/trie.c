@@ -237,10 +237,45 @@ void 	delete_ngram_subfunction(trie* ind,trie_node** deleted_nodes, int * to_be_
 	}
 }
 
+// quesstion try 1
 
-char* search(trie* ind, Ngram* searching_this){
+char* search(trie* ind, Ngram* Qgram){
 
-	return 0;
+	int ngramsize = Qgram->currentsize;
+	int i,j,k,child_position,ngram_length,capacity;
+	trie_node* wut = ind->root;
+	capacity = ind->added;
+
+	for(j=1;j<ngramsize;j++){
+		for(i=j;i<ngramsize;i++){
+			child_position=-1;
+			ngram_length=-1;
+
+			child_position=binary_search(wut,Qgram->wordBuffer[i],capacity);
+
+			if(child_position>=0){
+			    ngram_length++;
+			        if(wut->final){
+			        		// nmz auto to for dn xreiazetai 
+			        		// aplws ektupwse wordBUffer[j]
+			         	for(k=0;k<=ngram_length;k++){
+			        		printf("%s",Qgram->wordBuffer[k]);
+			        	}
+			        }
+			 // etsi nmz katevaineis ena epipedo ... pairneis ta paidia tou komvou pou thes
+			wut= wut[child_position].children;	// get the children
+
+			}else{
+				break;
+			}
+
+
+
+		}
+
+	}
+
+	return NULL;
 }
 
 
