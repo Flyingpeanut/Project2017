@@ -183,37 +183,56 @@ int  delete_ngram(trie* ind,Ngram* deleting_this){
 // whole ngram has been found and will be deleted
 void 	delete_ngram_subfunction(trie* ind,trie_node** deleted_nodes, int * to_be_deleted, int maxlevel){
 
-	int level  = maxlevel - 1, deleted_flag = 1;
+	int level  = maxlevel - 1;
 	trie_node * currentnode = deleted_nodes[level];
 	currentnode[ to_be_deleted[level] ].final = false;
 
 	for(; level >= 0; level--){
+
 		currentnode = deleted_nodes[level];
 		int position_found = to_be_deleted[level];
-		
-		if(deleted_flag == 0){
-			currentnode[position_found].added--;
-		
-		}
-		int size_children = currentnode[position_found].added;
-	
-		if(size_children > 0){	// dt delete 
+
+		if( currentnode[position_found].added > 0){	 
 			// other n grams pass from here can't delete, nor upper level
 			// thus deletion stop here
 			return;
 		}
-		else{
-			// reset then resort
-			deleted_flag = 0;
-			currentnode[position_found].word[0]		= '\0';
-			currentnode[position_found].final 		= false;
-			currentnode[position_found].capacity 	= 0;
-			currentnode[position_found].added 		= 0;
+		else{	//
 			if( currentnode[position_found].children != NULL ) {
 
 				free(currentnode[position_found].children);
 			}
-			//memmove
+
+			int move;
+
+			if(level==0){	// root case
+
+				move = (ind->added-position_found)*sizeof(trie_node);
+				ind->added--;
+			}
+			else{		
+
+				trie_node* parentnode = deleted_nodes[level - 1];
+				move = (parentnode->added-(position_found+1))*sizeof(trie_node);	//
+				parentnode->added--;
+			}
+
+			if(move > 0){	// if deleted element is 
+
+				memmove(&(currentnode[position_found]),&(currentnode[position_found+1]), move);
+			}
+			else if (move == 0){	// if deleted element is in last place just reset it
+
+				currentnode[position_found].word[0]		= '\0';
+				currentnode[position_found].final 		= false;
+				currentnode[position_found].capacity 	= 0;
+				currentnode[position_found].added 		= 0;
+				currentnode[position_found].children 	= NULL;
+			}
+			else{	// position if bigger than size of 
+
+				printf("why?\n");
+			}
 		}
 	}
 }
